@@ -286,8 +286,105 @@
   ```
   
   ### 그리드 레이아웃
-  
 
+  - 이 명세는 2차원 레이아웃을 다루고 있다. 즉, row, column을 동시에 제어하고 배치할 수 있다. `display: grid`가 적용되어잇고 `grid-template-columns: 1fr 1fr 1fr`로 3개의 column을 생성하고 새로운 단위인 `fr`를 이용해 사용 가능한 공간을 3개로 나누되 균등한 비율로 나누었다.
+  - 별도로 너비 설정 안해도 되고, `margin` 대신 `grid-gap`을 이용 
+    ``` css
+    .cards {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-gap: 20px;
+    }
+
+    .cards li {
+      background-color: #e5dbff;
+      border: 1px solid #d0bfff;
+      padding: 10px;
+      border-radius: 5px;
+    }
+    ```
+    ``` html
+    <div class="example">
+      <ul class="cards">
+        <li>
+          <h2>Card 1</h2>
+          <p>These cards have been laid out using grid layout. By setting <code>display: grid</code> on the
+              parent, all direct children become grid items.</p>
+        </li>
+        <li>
+          <h2>Card 2</h2>
+          <p>These cards have been laid out using grid layout. By setting <code>display: grid</code> on the
+              parent, all direct children become grid items.</p>
+        </li>
+
+        <li>
+          <h2>Card 3</h2>
+          <p>These cards have been laid out using grid layout. By setting <code>display: grid</code> on the
+              parent, all direct children become grid items.</p>
+        </li>
+        <li>
+          <h2>Card 4</h2>
+          <p>These cards have been laid out using grid layout. By setting <code>display: grid</code> on the
+              parent, all direct children become grid items.</p>
+        </li>
+        <li>
+          <h2>Card 5</h2>
+          <p>These cards have been laid out using grid layout. By setting <code>display: grid</code> on the
+              parent, all direct children become grid items.</p>
+        </li>
+      </ul>
+    </div>
+    ```
+    ![grid1](./newCssLayout/grid1.png)
+
+    - 그리드를 사용한 아이템 배치
+    - 오른쪽으로 읽는 언어(LTR), 왼쪽으로 읽는 언어(RTL)에 따라 번호의 순서가 달라진다.
+    - `grid-column, grid-row`를 사용해 2차원 그리드의 장점인 row, column영역 조절이 가능하다.
+
+    ``` css
+    .card1 {
+      grid-column: 1 / 3; /*1컬럼부터 2컬럼까지*/
+      grid-row: 1;
+    }
+    .card2 {
+      grid-column: 3; /*3컬럼만*/
+      grid-row: 1;
+    }
+    .card3 {
+      grid-column: 1; /*1컬럼만*/
+      grid-row: 2 / 4; /*2로우에서 3로우까지*/
+    }
+    .card4 {
+      grid-column: 2 / 4; /* 2컬럼에서 3컬럼까지 */
+      grid-row: 2;
+    }
+    .card5 {
+      grid-column: 2 / 4;
+      grid-row: 3;
+    }
+    ```
+    ![grid2](./newCssLayout/grid2.png)
+
+    - 그리드 아이템에 이름을 지어줄 수 있다.
+    - 위와 같은 결과 (`.`은 공백을 나타낸다)
+    ``` css
+    .card1 { grid-area: a; }
+    .card2 { grid-area: b; }
+    .card3 { grid-area: c; }
+    .card4 { grid-area: d; }
+    .card5 { grid-area: e; }
+
+    .cards {
+      ...
+      grid-template-area:
+      "a a b"
+      ". d d"
+      "c e e"
+    }
+    ```
 
   ### 기타
 
@@ -314,3 +411,279 @@
     ```
     ![multiColumn](./newCssLayout/multiColumn.png)
 
+## 제 4장
+
+  ### 플렉스 아이템 배치
+
+  - 플렉스 아이템이 컨테이너 height 만큼 커지는 이유는 기본값이 `stretch`이기 떄문이다.
+
+  ``` css
+    .cards {
+      margin: 0 -10px;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      /* align-items: stretch; 기본값 */
+      /*align-items: flex-start*/
+      /*align-items: flex-end*/
+      flex-wrap: wrap;
+    }
+  ```
+
+  ![flexitem1](./newCssLayout/flexitem1.png)
+
+  ---
+
+  ![flexitem2](./newCssLayout/flexitem2.png)
+
+  ---
+
+  ![flexitem3](./newCssLayout/flexitem3.png)
+
+  - 개별적으로 원하면 플렉스 아이템에 `align-self`를 적용하면 된다.
+  ``` css
+    .cards li:first-child {
+      align-self: flex-end;
+    }
+  ```
+  ![flexitem4](./newCssLayout/flexitem4.png)
+
+  - 아이템은 교차축(cross-axis)에서 이루어집니다. 수직
+  - `flex-direction: column`으로 변경하면 교차축이 수평이 되어 아래와 같이 된다.
+
+  ``` css
+    .cards {
+      ...
+      flex-direction: column;
+    }
+  ```
+
+  ![flexitem5](./newCssLayout/flexitem5.png)
+
+  ### 그리드 아이템 배치
+
+  - 그리드 아이템도 마찬가지로 `align-items: stretch`가 기본값이다.
+  - 개별적으로 원하면 역시 `align-self`를 사용하면 된다.
+
+  ``` css
+  .cards {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 100px);
+    grid-template-areas:
+      "a a a b"
+      "a a a b"
+      "c d d d";
+    grid-gap: 20px;
+    align-items: start;
+  }
+
+  .one {
+    grid-area: a;
+  }
+
+  .two {
+    grid-area: b;
+    align-self: stretch;
+  }
+
+  .three {
+    grid-area: c;
+    align-self: flex-end;
+  }
+
+  .four {
+    grid-area: d;
+    align-self: center;
+  }
+
+  .cards li {
+    background-color: #e3fafc;
+    border: 1px solid #99e9f2;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  ```
+
+  ![griditem1](./newCssLayout/griditem1.png)
+
+  - 메인 축을 정렬하려면 `justify-items`를 사용하고 개별적으로는 `justify-self`를 설정한다. Item4를 `d`로 설정하고 `stretch`를 적용했다.
+
+  ```css
+  .cards {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 100px);
+    grid-template-areas:
+      "a a a b"
+      "a a a b"
+      "c d d d";
+    grid-gap: 20px;
+    justify-items: end;
+  }
+
+  .four {
+    grid-area: d;
+    justify-self: stretch;
+  }
+  ```
+
+  ### 플렉스 아이템 정렬
+
+  - 플렉스박스에는 축이 1개밖에 없고 주축(main axis)에 여러 아이템을 둘 수 있기 때문에 `justify-items`, `justify-self`속성을 적용하지 않는다.
+  - 가끔 주축 위에 아이템을 일정한 간격으로 배치하고 싶을때는 플렉스 컨테이너 전체에 영향을 주는 `justify-content`를 사용한다. 주축 기준이고 `flex-direction`이 `row`라면 가로줄, `column`이라면 세로줄이다. 초기값은 `flex-start` 그래서 `display: flex`주고 아무것도 설정안하면 시작 부분에 늘어선다.
+  - 반대로 `flex-end`를 주면 컨테이너 끝에 늘어선다.
+
+  ``` css
+  .cards {
+    margin: 0 -10px;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    height: 50vh;
+  }
+
+  .cards li {
+    background-color: #e3fafc;
+    border: 1px solid #99e9f2;
+    margin: 0 10px 20px 10px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  ```
+  ``` html
+  <div class="example">
+    <ul class="cards">
+      <li>Item 1</li>
+      <li>Item 2</li>
+      <li>Item 3</li>
+      <li>Item 4</li>
+    </ul>
+  </div>
+  ```
+
+  ![flexitem7](./newCssLayout/flexitem7.png)
+
+  - `space-between`: 양끝 붙고 아이템 사이 일정한 간격
+  ![flexjustify1](./newCssLayout/flexjustify1.png)
+  - `space-around`: 양쪽 동일한 마진값
+  ![flexjustify2](./newCssLayout/flexjustify2.png)
+  - `space-evenly`: 모든 공백 균등하게 배분
+  ![flexjustify3](./newCssLayout/flexjustify3.png)
+
+
+  ### 플렉스 사용한 가운데 정렬
+
+  - 플렉스를 사용해 가운데 정렬하기(이전에는 position: absolute를 사용하거나 table을 이용한 방법 등)
+
+  ``` css
+  .example {
+    display: flex;
+    justify-content : center;
+    align-items: center;
+  }
+  ```
+  ``` html
+  <div class="example">
+      가운데 할 요소
+  </div>
+  ```
+
+  ### 플렉스박스의 `align-content` 속성
+
+  - 플렉스박스의 `align-content`는 교차죽(Cross-axis)에서 동작, 아래와 같을 경우 동작
+    - `flex-wrap` 속성의 값이 `wrap`일 때
+    - 아이템을 배치하기 위해 필요한 공간보다 컨테이너가 길 때
+    ``` css
+    .cards {
+      display: flex;
+      flex-wrap :wrap;
+      height: 50vh;
+    }
+
+    .cards li {
+      flex: 1 1 250px;
+    }
+    ```
+  
+  - 기본값은 `strecth`
+  ![flexalign1](./newCssLayout/flexalign1.png)
+
+  - `align-content: space-between` : 처음과 끝에 붙고(사용할 수 있는 공간 모두 사용) 중간 공간 분배
+
+  ![flexalign2](./newCssLayout/flexalign2.png)
+
+  ### 그리드 트랙과 배치와 정렬
+
+- `align-content`, `justify-content` 속성은 그리드 레이아웃의 트랙에 영향을 줍니다. 둘다 `space-between`을 사용하면 컨테이너 너비와 높이를 모두 채울 수 있습니다.
+
+``` css
+.cards {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, 15%);
+  grid-template-rows: repeat(3, 100px);
+  height: 50vh;
+  grid-template-areas:
+    "a a a b"
+    "a a a b"
+    "c d d d";
+  grid-gap: 20px;
+  /*align-content: space-between;*/
+  /*justify-content: space-between;*/
+}
+```
+
+![gridalign1](./newCssLayout/gridalign1.png)
+
+- `space-between`
+![gridalign2](./newCssLayout/gridalign2.png)
+
+### 플렉스 자동마진
+
+- 1차원이라서 `justify-items`가 적용되지 않는다. 하지만 같은 줄에 플렉스 박스 1개만 다른 방식으로 배치하고 싶을때는 자동마진을 사용한다.
+
+``` css
+.cards {
+  margin: 0 -10px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+.cards li {
+  background-color: #e3fafc;
+  border: 1px solid #99e9f2;
+  margin: 0 10px 20px 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.cards li:last-child {
+  margin-left: auto;
+}
+```
+``` html
+<ul class="cards">
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+  <li>Item 4</li>
+</ul>
+```
+![automargin](./newCssLayout/automargin.png)
+
+
+### 논리적 속성과 물리적 속성
+
+- 물리적 속성 : `left, right, top, bottom` 어떤 요소가 화면에서 물리적으로 어디에 위치하는지 알려준다.
+- 논리적 속성 : 물리적 속성의 경우 설정된 글쓰기 모드에 따라 문제가 발생하므로 논리적인 속성을 사용한다. `start, end`와 같은 것들
